@@ -391,48 +391,48 @@ class Keyboard:
 
     # hold down key
     @_handle_exceptions
-    def press(self, key:str) -> bool:
-        '''
+    def press(self, key) -> bool:
+        """
         press down a keyboard key
 
         ---
         args:
-            key (str): key to press
+            key (str or vk): key to press
         returns:
             bool: true if press succeeded, false otherwise
-        '''
+        """
         inp = self._create_input(key)
         self.user32.SendInput(1, byref(inp), sizeof(INPUT))
         return True
 
     # release the key
     @_handle_exceptions
-    def release(self, key:str) -> bool:
-        '''
+    def release(self, key) -> bool:
+        """
         release a keyboard key
 
         ---
         args:
-            key (str): key to release
+            key (str or vk): key to release
         returns:
             bool: true if release succeeded, false otherwise
-        '''
+        """
         inp = self._create_input(key, key_up=True)
         self.user32.SendInput(1, byref(inp), sizeof(INPUT))
         return True
 
     # simple keypress
     @_handle_exceptions
-    def keypress(self, key:str, hold:int = 80) -> bool:
-        '''
+    def keypress(self, key, hold:int = 80) -> bool:
+        """
         simluate a keypress
 
         ---
         args:
-            key (str): key to release
+            key (str or vk): key to release
         returns:
             bool: true if keypress succeeded, false otherwise
-        '''
+        """
         hold_time = random.uniform(hold * 0.9 / 1000, hold * 1.1 / 1000)
         if not self.press(key):
             return False
@@ -442,7 +442,7 @@ class Keyboard:
     # combination of two or more keys
     @_handle_exceptions
     def combo(self, keys:list, hold:int = 80) -> bool:
-        '''
+        """
         simluate pressing a combination of keys
 
         ---
@@ -450,12 +450,12 @@ class Keyboard:
             keys (list): list of keys to press
         returns:
             bool: true if combo succeeded, false otherwise
-        '''
+        """
         # press keys
         for key in keys:
             if not self.press(key):
                 return False
-            time.sleep(random.uniform(0.01, 0.02))
+            time.sleep(random.uniform(0.01, 0.02)) 
 
         # hold
         hold_time = random.uniform(hold * 0.9 / 1000, hold * 1.1 / 1000)
@@ -473,5 +473,7 @@ class Keyboard:
 
 if __name__ == '__main__':
     mouse = Mouse()
-    print(mouse.move(1200,500, smoothing='ease_out_in'))
+    print(mouse.move(1200,500, smoothing='ease_in_out'))
     print(mouse.click())
+    keyboard = Keyboard()
+    print(keyboard.keypress(win32con.VK_SPACE))
